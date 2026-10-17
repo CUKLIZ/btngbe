@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Http\Resources\TaskResource;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -29,7 +30,10 @@ class TaskController extends Controller
 
         $tasks = Task::all();
 
-        return response()->json($tasks);
+        return response()->json([
+            'message' => 'Daftar semua task',
+            'data' => TaskResource::collection($tasks),
+        ], 200);
     }
 
     /**
@@ -45,7 +49,10 @@ class TaskController extends Controller
 
         $task = Task::create($validated);
 
-        return response()->json($task, 201);
+        return response()->json([
+            'message' => 'Task Berhasil Di Buat',
+            'data' => new TaskResource($task),
+        ], 201);
     }
 
     /**
@@ -58,7 +65,10 @@ class TaskController extends Controller
             return response()->json(['message' => 'Task tidak ditemukan'], 404);
         }
 
-        return response()->json($task);
+        return response()->json([
+            'message' => 'Task berhasil ditampilkan',
+            'data' => new TaskResource($task),
+        ], 200);
     }
 
     /**
@@ -79,7 +89,10 @@ class TaskController extends Controller
 
         $task->update($validated);
 
-        return response()->json($task);
+        return response()->json([
+            'message' => 'Task Berhasil Di Update',
+            'data' => new TaskResource($task),
+        ], 200);
     }
 
     /**
